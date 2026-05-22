@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экосистема Numerology 360</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Numerology 360</h2>
+            <span>Платформа Жизненных Помощников</span>
+        </div>
+        <div class="menu-group">
+            <div class="menu-title">Личный мониторинг</div>
+            <button class="menu-btn active" data-space="dashSpace">✨ Главный Дашборд</button>
+            <button class="menu-btn" data-space="relationsSpace">🤝 Навигатор Отношений</button>
+            <button class="menu-btn" data-space="calendarTab">📅 Бизнес-Календарь</button>
+        </div>
+        <div class="menu-group">
+            <div class="menu-title">В разработке</div>
+            <button class="menu-btn disabled" disabled>🧘 Трекер Чакр</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-header">
+            <div class="user-badge">
+                <div class="avatar-stub" id="userAvatar">Н</div>
+                <div>
+                    <h3 style="color: white; text-align: left;" id="welcomeName">Приветствуем, Искатель</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);" id="welcomeDate">Заполните профиль ниже для сонастройки системы</p>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Личная энергия дня</span>
+                <div style="font-size: 1.2rem; font-weight: bold; color: var(--day-energy);" id="globalDayCode">-</div>
+            </div>
+        </div>
+
+        <div id="dashSpace" class="app-space active">
+            <div class="profile-card">
+                <h2>👤 Настройка вашего мастер-профиля</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Энергия Имени / Фамилии:</label>
+                        <input type="text" id="mainName" placeholder="ИВАН / IVAN">
+                    </div>
+                    <div class="input-group">
+                        <label>Дата рождения:</label>
+                        <input type="date" id="mainDate">
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashResults" style="display: none;">
+                <div class="dashboard-grid">
+                    <div style="background: var(--card); border: 1px solid var(--card-border); padding: 20px; border-radius: 12px; height: fit-content;">
+                        <h3 style="margin-bottom: 15px;">Сакральная Квадрат-Матрица</h3>
+                        <div class="matrix-grid" id="matrixGrid">
+                            <div class="cell" data-n="3"><span>Семья (3)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="6"><span>Наставники (6)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="9"><span>Слава (9)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="2"><span>Партнерство (2)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="5"><span>Центр Силы (5)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="8"><span>Мудрость (8)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="1"><span>Путь (1)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="4"><span>Богатство (4)</span><div class="digits"></div></div>
+                            <div class="cell" data-n="7"><span>Творчество (7)</span><div class="digits"></div></div>
+                        </div>
+                    </div>
+                    <div class="results-grid">
+                        <div class="card"><h3>Число Души</h3><div class="num" id="cardM"></div><div class="sub" id="subM"></div></div>
+                        <div class="card"><h3>Число Судьбы</h3><div class="num" id="cardB"></div><div class="sub" id="subB"></div></div>
+                        <div class="card"><h3>Число Имени</h3><div class="num" id="cardN"></div><div class="sub">Внешнее эго</div></div>
+                        <div class="card"><h3>Внутреннее Я</h3><div class="num" id="cardS"></div><div class="sub">Тайный мотив</div></div>
+                        <div class="card"><h3>Маска</h3><div class="num" id="cardP"></div><div class="sub">Социальный щит</div></div>
+                        <div class="card"><h3>Личный Год</h3><div class="num" id="cardY"></div><div class="sub" id="subY"></div></div>
+                    </div>
+                </div>
+                <div class="section-block" id="matrixTextAnalysisBlock" style="border-left: 5px solid var(--gold);"></div>
+                <div class="section-block" id="dayChainBlock" style="border-left: 5px solid var(--day-energy);"></div>
+            </div>
+        </div>
+
+        <div id="relationsSpace" class="app-space" style="display: none;">
+            <div class="profile-card" style="border-top: 4px solid var(--love);">
+                <h2>🤝 Навигатор отношений и тактики поведения</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Роль близкого:</label>
+                        <select id="relRole">
+                            <option value="child">👼 Ребёнок</option>
+                            <option value="friend">🧩 Друг</option>
+                            <option value="partner" selected>💖 Партнёр (Отношения)</option>
+                            <option value="colleague">💼 Коллега / Подчинённый</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Дата рождения близкого:</label>
+                        <input type="date" id="relDate">
+                    </div>
+                    <div class="input-group" style="justify-content: flex-end;">
+                        <button class="action-btn" id="btnCalcRelations">Просканировать тактику</button>
+                    </div>
+                </div>
+            </div>
+            <div class="section-block" id="relOutputBlock" style="display: none; border-left: 5px solid var(--love);"></div>
+        </div>
+
+        <div id="calendarTab" class="app-space" style="display: none;">
+            <div class="profile-card" style="border-top: 4px solid var(--gold);">
+                <h2>📅 Персональный Бизнес-Календарь PRO</h2>
+                <p class="subtitle" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                    Расчет планетарных периодов и индивидуальной совместимости на основе Наваграхи.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: end;">
+                    <div class="input-group">
+                        <label>Целевой месяц:</label>
+                        <select id="calMonth" style="width: 100%; padding: 10px; background: #161b22; border: 1px solid var(--card-border); color: white; border-radius: 6px;">
+                            <option value="0">Январь</option>
+                            <option value="1">Февраль</option>
+                            <option value="2">Март</option>
+                            <option value="3">Апрель</option>
+                            <option value="4">Май</option>
+                            <option value="5">Июнь</option>
+                            <option value="6">Июль</option>
+                            <option value="7">Август</option>
+                            <option value="8">Сентябрь</option>
+                            <option value="9">Октябрь</option>
+                            <option value="10">Ноябрь</option>
+                            <option value="11">Декабрь</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Целевой год:</label>
+                        <input type="number" id="calYear" value="2026" style="width: 100%; padding: 10px; background: #161b22; border: 1px solid var(--card-border); color: white; border-radius: 6px;">
+                    </div>
+                    <div class="input-group">
+                        <button class="action-btn" id="buildCalendarBtn" style="background: var(--gold); color: #000; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%;">
+                            Сгенерировать месяц
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendarMeta" style="display: none; flex-direction: column; gap: 20px; margin-top: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: var(--card); border: 1px solid var(--card-border); padding: 15px; border-radius: 12px; border-top: 3px solid var(--gold);">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Число Души (Moolank)</span>
+                        <div id="calUserMoolank" style="font-size: 1.4rem; font-weight: bold; color: var(--gold); margin-top: 4px;">-</div>
+                    </div>
+                    <div style="background: var(--card); border: 1px solid var(--card-border); padding: 15px; border-radius: 12px; border-top: 3px solid var(--secondary);">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Индекс Личного Года</span>
+                        <div id="calUserPersonalYear" style="font-size: 1.4rem; font-weight: bold; color: var(--secondary); margin-top: 4px;">-</div>
+                    </div>
+                </div>
+                <div style="background: #0d1117; border: 1px solid var(--card-border); padding: 20px; border-radius: 12px;">
+                    <h4 style="color: white; margin-bottom: 15px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">📈 Триада бизнес-потенциала на выбранный месяц:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                                <span style="color: var(--text-muted);">💰 Финансовый Поток:</span>
+                                <span style="color: var(--success); font-weight: bold;" id="idxFinance">-</span>
+                            </div>
+                            <div style="background: #21262d; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="barFinance" style="background: var(--success); height: 100%; width: 0%; transition: width 0.8s ease;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                                <span style="color: var(--text-muted);">⚠️ Уровень Бизнес-Рисков:</span>
+                                <span style="color: var(--accent); font-weight: bold;" id="idxRisk">-</span>
+                            </div>
+                            <div style="background: #21262d; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="barRisk" style="background: var(--accent); height: 100%; width: 0%; transition: width 0.8s ease;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                                <span style="color: var(--text-muted);">🚀 КПД Продуктивности:</span>
+                                <span style="color: var(--gold); font-weight: bold;" id="idxEff">-</span>
+                            </div>
+                            <div style="background: #21262d; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="barEff" style="background: var(--gold); height: 100%; width: 0%; transition: width 0.8s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendarWrapper" style="display: none;">
+                
+                <div class="desktop-calendar-view">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 12%;">Дата</th>
+                                <th style="width: 8%; text-align: center;">Инд.</th>
+                                <th style="width: 15%;">Вибрация</th>
+                                <th style="width: 15%;">Статус</th>
+                                <th style="width: 40%;">Аналитический фокус дня</th>
+                                <th style="width: 10%; text-align: center;">Скачать отчёт</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendarGridBlock">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="calendarMobileBlock" class="mobile-calendar-view">
+                    </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./dashboard.js"></script>
+</body>
+</html>
