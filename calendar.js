@@ -127,33 +127,28 @@ export function generateBusinessCalendar(birthDateStr, targetMonth, targetYear) 
 
         if (dayVibration === moolank) {
             finalStatus = "Благоприятно";
-            premiumIndicator = "🔥👑";
             dayFinanceWeight = 1.0;
             dayEffWeight = 1.0;
             dayRiskWeight = 0.0;
             textPrefix = `🌟 ЛИЧНЫЙ ДЕНЬ СИЛЫ. Полный волновой резонанс дня с вашей корневой структурой. Внешние ограничения деактивированы. Любое стратегическое решение имеет абсолютный приоритет. `;
         } else if (dayVibration === bBhagya) {
             finalStatus = "Благоприятно";
-            premiumIndicator = "💰🎯";
             dayFinanceWeight = 1.0;
             dayEffWeight = 0.8;
             textPrefix = `🎯 РЕЗОНАНС ПРЕДНАЗНАЧЕНИЯ. Сутки активируют ваш финансовый вектор. Успех приносят масштабные, нестандартные идеи. Время для крупных чеков. `;
         } else if (isCoreEnemy) {
             finalStatus = "Внимание";
-            premiumIndicator = "⚠️⚡";
             dayRiskWeight = 1.0;
             dayEffWeight = 0.2;
             dayFinanceWeight = 0.1;
             textPrefix = `⚠️ ПЛАНЕТАРНЫЙ ДИССОНАНС. Транзит ${planet.name} входит в противоречие с вашей картой. Повышен риск слепых зон в финмоделях. Введите режим защиты активов. `;
         } else if (isCoreFriend) {
             finalStatus = "Благоприятно";
-            premiumIndicator = "🚀💎";
             dayFinanceWeight = 0.9;
             dayEffWeight = 0.9;
             textPrefix = `💎 СИНЕРГИЯ ДХАНА-ЙОГИ. Гармоничный деловой фон. Маркетинговые гипотезы подтверждаются быстрее, переговоры проходят с минимальным сопротивлением. `;
         } else {
             finalStatus = "Нейтрально";
-            premiumIndicator = "📋✨";
             textPrefix = `⚖️ СТАБИЛЬНЫЙ ТРАНЗИТ. Сбалансированное операционное поле без выраженных угроз. Подходит для планового выполнения задач компании. `;
         }
 
@@ -194,59 +189,4 @@ export function generateBusinessCalendar(birthDateStr, targetMonth, targetYear) 
         metrics: { financeIndex, riskIndex, efficiencyIndex },
         rows: rows
     };
-}
-
-export function downloadDayReport(dayData, userBirthDate) {
-    if (!dayData) return;
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-
-    const cyrillicFont = "AAEAAAASAQAABAAwR0RFRgS/BLoAAAGgAAAAQkdNQVAt4U0FAAACNAAAADZjbWFwB3EHiQAAArwAAAFiY3Z0IAAZAHwAAAToAAAAAmhhcHBlgS7FAAAFIAAAACZnbHlmOCu2mgAABXAAABMwaGVhZBt949QAAAEwAAAANmhoZWEHeAMXAAABWAAAACRobXR4InwAAAAAAYQAAAAgbG9jYRFgEVQAAAVIAAAAEG1heHAAEwBBAAABYAAAACBuYW1lORcl7AAAFmQAAAFbcG9zdP9tAGoAAAGsAAAAIhABAAAAAQAA7mSWhF8PPPUACwQgAAAAAM311fQAAAAAzfXV9AAA/4wEIAQgAAAACAACAAAAAAAAAAEAAAUb/4wALgQgAAAA/wQgAAEAAAAAAAAAAAAAAAAAAAAIAAEAAAAIABUAAgAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAQYAAAGNAAFAAAUAAgXmBZsAAAEmBeYFmwAAA9EAZgIAAAILBgkFAAAgAAv/QAAALwAAAAAAAAAAUG9zdABAbwBvBxsFG/+MAC4EGwPoAAAAAQAAAAAAAQAAAAMAAAAsAAAAAQAAAFYAAAABAAAAAgAAAAEAAwAAAAEAAwAFAAMABwAHAAMACQANAAAAAQAAAAoAHgAsAAJERkxUAA5sYXRuAA4ABAAAAAD__wABAAAAAWtlcm4ADAAAAAEAAAABAAQAAgAAAAEAAQAFAAEABgAFAAIAAgADAAQABQAGAAcACAAIAAkACgALAAwADf/hAAEAAQAAAAEAAAAAAAIAAgADAAQABQAGAAcACAAIAAkACgALAAwADgAOAA8AFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBJwEoASkBKgErASwBLQEuAS8BMAExATIBMwE0ATUBNgE3ATgBOQE6ATsBPAE9AT4BPwFAAUEBQgFDAUQBRwFGAUgBSQFKAVMBVAFVAVYBVwFYAVkBWgFiAWMBZAFmAWUBZwFoAWkBagFrAWwBbQFuAW8BcAFxAXIBcwF0AXUBdgF3AXgBeQF6AXsBfAF9AX4BfwGAAf8BgQGCAYMBhAGFAYYBhwGIAYkBigGLAYwBjQGOAY8BkAGRAZIBkwGVAZQBlgG3AbgBuQG6AbsBvAG9Ab4BvwHAAcEBwgHDAcQBxQHHAcYByAHJAcoBywHMAc0BzgHPAZABmQGaAZsBnAHAAMUBwQDFAcQAxQHFAMUAAgAZAHwAAAToAAAAAmgAAwABAAMAAwAFAAUABgAHAAgACQAKAAsADAANAA4ADwAQABEAEgATABQAFgAXABgAGQAAAAAAAPUA9QD1APUA9QD1APUA9QD1APUA9QD1APUA9QD1APUA9QD1APUA9QD1APUA9QD1APUA9QD1APUA9QD1AAEAEAALAAUABAAFAAYABwAIAAkACgALAAwADgAOAA8AFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBJwEoASkBKgErASwBLQEuAS8BMAExATIBMwE0ATUBNgE3ATgBOQE6ATsBPAE9AT4BPwFAAUEBQgFDAUQBRwFGAUgBSQFKAVMBVAFVAVYBVwFYAVkBWgFiAWMBZAFmAWUBZwFoAWkBagFrAWwBbQFuAW8BcAFxAXIBcwF0AXUBdgF3AXgBeQF6AXsBfAF9AX4BfwGAAf8BgQGCAYMBhAGFAYYBhwGIAYkBigGLAYwBjQGOAY8BkAGRAZIBkwGVAZQBlgG3AbgBuQG6AbsBvAG9Ab4BvwHAAcEBwgHDAcQBxQHHAcYByAHJAcoBywHMAc0BzgHPAZABmQGaAZsBnAHAAMUBwQDFAcQAxQHFAMUAAPsAAQAFAAcABgAIAAkACgALAAwADgAOAA8AFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUACwACAAgADgAPAA0AEQASABMAFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBCQEKAAwADQAPAAsADAANAA8AEAARABIAEwAUABUAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBCQEKAAwADQAPAAsAEAARABIAEwAUABUAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBCQEKAAwADQAPAAsAEAARABIAEwAUABUAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBCQEKAAwADQAPAAsAFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBCQEKAAwADQAPAAsAHAAdAB4AHwAIAAkACgALAAwADgAOAA8AFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUBCQEKAAwADQAPAAsA";
-
-    doc.addFileToVFS("Roboto-Regular.ttf", cyrillicFont);
-    doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
-    doc.setFont("Roboto");
-
-    const cleanText = (text) => text.replace(/\*\*/g, '').replace(/\*/g, '');
-
-    doc.setFillColor(13, 17, 23);
-    doc.rect(0, 0, 210, 35, "F");
-    doc.setFont("Roboto", "normal");
-    doc.setFontSize(14);
-    doc.setTextColor(212, 175, 55);
-    doc.setFontSize(9);
-    doc.setTextColor(139, 148, 158);
-    doc.text("АНАЛИТИЧЕСКИЙ МЕМОРАНДУМ СУТОЧНОЙ АКТИВНОСТИ", 14, 22);
-
-    doc.setLineWidth(0.3);
-    doc.setDrawColor(212, 175, 55);
-    doc.line(14, 27, 196, 27);
-
-    doc.setFontSize(10);
-    doc.setTextColor(50, 50, 50);
-    doc.text(`Профиль инвестора (B-Date): ${userBirthDate}`, 14, 45);
-    doc.text(`Дата наблюдения: ${dayData.date}`, 14, 51);
-    doc.text(`Архитип транзита: ${cleanText(dayData.vibration)}`, 14, 57);
-
-    doc.setFillColor(245, 242, 230);
-    doc.rect(14, 63, 182, 11, "F");
-    doc.setFontSize(11);
-    doc.setTextColor(150, 110, 30);
-    doc.text(`СТАТУС СУТОК: ${cleanText(dayData.statusText)} ${dayData.indicator}`, 18, 70);
-
-    doc.setFontSize(10.5);
-    doc.setTextColor(30, 30, 30);
-    const rawFocus = cleanText(dayData.focus);
-    const splitText = doc.splitTextToSize(rawFocus, 175);
-    let cursorY = 85;
-    doc.text(splitText, 14, cursorY);
-
-    const pageHeight = doc.internal.pageSize.height;
-    doc.setLineWidth(0.2);
-    doc.setDrawColor(220, 220, 220);
-    doc.line(14, pageHeight - 20, 196, pageHeight - 20);
-    doc.setFontSize(8);
-    doc.setTextColor(160, 160, 160);
-
-    doc.save(`Business_Report_${dayData.date}.doc`);
 }
