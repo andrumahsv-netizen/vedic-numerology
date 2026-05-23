@@ -131,30 +131,30 @@ export function generateBusinessCalendar(birthDateStr, targetMonth, targetYear) 
             dayFinanceWeight = 1.0;
             dayEffWeight = 1.0;
             dayRiskWeight = 0.0;
-            textPrefix = `🌟 **ЛИЧНЫЙ ДЕНЬ СИЛЫ**. Полный волновой резонанс дня с вашей корневой структурой. Внешние ограничения деактивированы. Любое стратегическое решение имеет абсолютный приоритет. `;
+            textPrefix = `🌟 ЛИЧНЫЙ ДЕНЬ СИЛЫ. Полный волновой резонанс дня с вашей корневой структурой. Внешние ограничения деактивированы. Любое стратегическое решение имеет абсолютный приоритет. `;
         } else if (dayVibration === bBhagya) {
             finalStatus = "Благоприятно";
             premiumIndicator = "💰🎯";
             dayFinanceWeight = 1.0;
             dayEffWeight = 0.8;
-            textPrefix = `🎯 **РЕЗОНАНС ПРЕДНАЗНАЧЕНИЯ**. Сутки активируют ваш финансовый вектор. Успех приносят масштабные, нестандартные идеи. Время для крупных чеков. `;
+            textPrefix = `🎯 РЕЗОНАНС ПРЕДНАЗНАЧЕНИЯ. Сутки активируют ваш финансовый вектор. Успех приносят масштабные, нестандартные идеи. Время для крупных чеков. `;
         } else if (isCoreEnemy) {
             finalStatus = "Внимание";
             premiumIndicator = "⚠️⚡";
             dayRiskWeight = 1.0;
             dayEffWeight = 0.2;
             dayFinanceWeight = 0.1;
-            textPrefix = `⚠️ **ПЛАНЕТАРНЫЙ ДИССОНАНС**. Транзит ${planet.name} входит в противоречие с вашей картой. Повышен риск слепых зон в финмоделях. Введите режим защиты активов. `;
+            textPrefix = `⚠️ ПЛАНЕТАРНЫЙ ДИССОНАНС. Транзит ${planet.name} входит в противоречие с вашей картой. Повышен риск слепых зон в финмоделях. Введите режим защиты активов. `;
         } else if (isCoreFriend) {
             finalStatus = "Благоприятно";
             premiumIndicator = "🚀💎";
             dayFinanceWeight = 0.9;
             dayEffWeight = 0.9;
-            textPrefix = `💎 **СИНЕРГИЯ ДХАНА-ЙОГИ**. Гармоничный деловой фон. Маркетинговые гипотезы подтверждаются быстрее, переговоры проходят с минимальным сопротивлением. `;
+            textPrefix = `💎 СИНЕРГИЯ ДХАНА-ЙОГИ. Гармоничный деловой фон. Маркетинговые гипотезы подтверждаются быстрее, переговоры проходят с минимальным сопротивлением. `;
         } else {
             finalStatus = "Нейтрально";
             premiumIndicator = "📋✨";
-            textPrefix = `⚖️ **СТАБИЛЬНЫЙ ТРАНЗИТ**. Сбалансированное операционное поле без выраженных угроз. Подходит для планового выполнения задач компании. `;
+            textPrefix = `⚖️ СТАБИЛЬНЫЙ ТРАНЗИТ. Сбалансированное операционное поле без выраженных угроз. Подходит для планового выполнения задач компании. `;
         }
 
         if ([4, 14, 29].includes(tithiIndex)) {
@@ -167,11 +167,11 @@ export function generateBusinessCalendar(birthDateStr, targetMonth, targetYear) 
         highProductivityDays += dayEffWeight;
 
         let finalFocus = `${textPrefix}\n\n` +
-            `💼 **Вектор Действия:** Развитие через ${planet.keyword} (${planet.biz}).\n\n` +
-            `🛑 **Слепые Зоны Рисков:** ${planet.shadow}\n\n` +
-            `🌙 **Контекст Титхи:** ${tithiText}\n` +
-            `📊 **Макро-Импульс:** ${moonPhaseText}\n\n` +
-            `📅 **Цикл Декады:** ${decade.text}`;
+            `💼 Вектор Действия: Развитие через ${planet.keyword} (${planet.biz}).\n\n` +
+            `🛑 Слепые Зоны Рисков: ${planet.shadow}\n\n` +
+            `🌙 Контекст Титхи: ${tithiText}\n` +
+            `📊 Макро-Импульс: ${moonPhaseText}\n\n` +
+            `📅 Цикл Декады: ${decade.text}`;
 
         const formattedDate = `${String(day).padStart(2, '0')}.${String(currentMonthNum).padStart(2, '0')}`;
 
@@ -196,9 +196,6 @@ export function generateBusinessCalendar(birthDateStr, targetMonth, targetYear) 
     };
 }
 
-// ==========================================================================
-// 6. ФУНКЦИЯ СКАЧИВАНИЯ ПРЕМИУМ-ОТЧЕТА В ФОРМАТЕ PDF
-// ==========================================================================
 export function downloadDayReport(dayData, userBirthDate) {
     if (!dayData) return;
     const { jsPDF } = window.jspdf;
@@ -217,7 +214,6 @@ export function downloadDayReport(dayData, userBirthDate) {
     doc.setFont("Roboto", "normal");
     doc.setFontSize(14);
     doc.setTextColor(212, 175, 55);
-    doc.text("PREMIUM BUSINESS INTELLIGENCE REPORT", 14, 15);
     doc.setFontSize(9);
     doc.setTextColor(139, 148, 158);
     doc.text("АНАЛИТИЧЕСКИЙ МЕМОРАНДУМ СУТОЧНОЙ АКТИВНОСТИ", 14, 22);
@@ -251,8 +247,6 @@ export function downloadDayReport(dayData, userBirthDate) {
     doc.line(14, pageHeight - 20, 196, pageHeight - 20);
     doc.setFontSize(8);
     doc.setTextColor(160, 160, 160);
-    doc.text("Сгенерировано автоматической системой бизнес-моделирования Premium-класса.", 14, pageHeight - 14);
-    doc.text("Конфиденциально. Предназначено для личного стратегического планирования.", 14, pageHeight - 10);
 
-    doc.save(`Business_Report_${dayData.date}.pdf`);
+    doc.save(`Business_Report_${dayData.date}.doc`);
 }
