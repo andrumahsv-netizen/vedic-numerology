@@ -1,44 +1,33 @@
-// ==========================================================================
-// ИНТЕРФЕЙСНЫЙ МОДУЛЬ ДАШБОРДА (dashboard.js) — ПОЛНАЯ ИСПРАВЛЕННАЯ СБОРКА
-// ==========================================================================
-
 import { NAVAGRAHA, CORE_DAY_DB, BEHAVIOR_TIPS } from './db.js';
 import { calculateMasterProfile, calculateDayChain, analyzeMatrixData } from './engine.js';
 import { getAdvancedRelationTip } from './relations.js';
 import { generateBusinessCalendar } from './calendar.js';
 
-// Глобальное состояние сессии для хранения чистых нумерологических параметров
 let sessionState = {
-    moolank: null,     // Число Души пользователя (железобетонный базис)
-    userDayCode: null  // Актуальный код энергии на текущие сутки
+    moolank: null,
+    userDayCode: null
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Инициализация кликов по вкладкам бокового меню
     document.querySelectorAll('.menu-btn:not(.disabled)').forEach(btn => {
         btn.addEventListener('click', (e) => switchTab(e));
     });
 
-    // 2. Слушатели изменений для полей профиля
     const mainNameInput = document.getElementById('mainName');
     const mainDateInput = document.getElementById('mainDate');
     if (mainNameInput) mainNameInput.addEventListener('input', saveUserProfile);
     if (mainDateInput) mainDateInput.addEventListener('change', saveUserProfile);
 
-    // 3. Слушатель для кнопки Навигатора Отношений
     const btnCalcRelations = document.getElementById('btnCalcRelations');
     if (btnCalcRelations) btnCalcRelations.addEventListener('click', runRelationsAnalysis);
 
-    // 4. Слушатель для кнопки Бизнес-Календаря PRO
     const buildCalBtn = document.getElementById('buildCalendarBtn');
     if (buildCalBtn) {
         buildCalBtn.addEventListener('click', runBusinessCalendarGeneration);
     }
 
-    // 5. Первоначальный запуск системы из памяти
     loadUserProfile();
 
-    // 6. Отказоустойчивая обработка мобильного меню
     const burgerBtn = document.getElementById('burgerBtn');
     const navTabs = document.getElementById('navTabs');
     if (burgerBtn && navTabs) {
@@ -55,7 +44,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Логика переключения пространств (экранов)
 function switchTab(event) {
     const spaceId = event.currentTarget.getAttribute('data-space');
     if (!spaceId) return;
@@ -91,30 +79,24 @@ function saveUserProfile() {
     if (date) renderDashboard(name, date);
 }
 
-// Отрендерить Главный Дашборд
 function renderDashboard(name, date) {
     const profile = calculateMasterProfile(name, date);
     if (!profile) return;
 
-    // Сохраняем базовое Число Души в сессию
     sessionState.moolank = profile.soulNum;
 
-    // ИЗБЕГАЕМ UTC БАГОВ: Извлекаем чистые компоненты даты рождения пользователя
     const parts = date.split('-');
-    const birthDay = parseInt(parts[2], 10);      // Получаем чистые 18!
+    const birthDay = parseInt(parts[2], 10);
 
-    // Для виджета "Личная энергия дня" на ГЛАВНОМ экране берем ТЕКУЩИЙ реальный день устройства
     const currentTodayRealDay = new Date().getDate(); 
 
-    // Рассчитываем цепочку трансформации для сегодняшнего дня
     const dayData = calculateDayChain(birthDay, currentTodayRealDay);
     sessionState.userDayCode = dayData.finalCode;
 
     const dashResults = document.getElementById('dashResults');
     if (dashResults) dashResults.style.display = 'block';
 
-    document.getElementById('welcomeName').innerText = name ? `Искатель, ${name}` : "Приветствуем, Искатель";
-    document.getElementById('welcomeDate').innerText = `Профиль сонастроен`;
+    document.getElementById('welcomeName').innerText = name ? `Пользователь, ${name}` : "Приветствуем, Искатель";
     document.getElementById('userAvatar').innerText = name ? name.charAt(0).toUpperCase() : "Н";
     document.getElementById('globalDayCode').innerText = dayData.finalCode;
     
@@ -128,7 +110,6 @@ function renderDashboard(name, date) {
     document.getElementById('cardY').innerText = profile.personalYear;
     document.getElementById('subY').innerText = NAVAGRAHA[profile.personalYear]?.planet || "";
 
-    // Отрисовка ячеек Сакральной Квадрат-Матрицы
     document.querySelectorAll('#matrixGrid .cell').forEach(cell => {
         let n = cell.dataset.n;
         let count = profile.rawDigits.filter(x => String(x) === String(n)).length;
@@ -144,9 +125,8 @@ function renderDashboard(name, date) {
         }
     });
 
-    // Анализ Сакральной Матрицы
     const matrixAnalysis = analyzeMatrixData(profile.rawDigits);
-    let matrixHtml = `<h2>🧩 Глубокий анализ Сакральной Матрицы</h2>`;
+    let matrixHtml = `<h2>🧩 Анализ Матрицы</h2>`;
     
     if (matrixAnalysis.arrows && matrixAnalysis.arrows.length > 0) {
         matrixHtml += `<div style="margin-bottom: 20px; padding: 15px; background: rgba(223,177,91,0.08); border-radius: 8px; border: 1px dashed var(--gold);">`;
@@ -173,12 +153,11 @@ function renderDashboard(name, date) {
     const matrixTextBlock = document.getElementById('matrixTextAnalysisBlock');
     if (matrixTextBlock) matrixTextBlock.innerHTML = matrixHtml;
 
-    // --- ИСПРАВЛЕННЫЙ БЛОК: Рендеринг трансформации Энергии Дня ---
     let reducedSoul = birthDay % 9 || 9;
     let displaySoul = birthDay > 9 ? `${birthDay} (сокращено до ${reducedSoul})` : birthDay;
     
     let chainHtml = `
-        <h2>🔮 Траектория Энергии Суток: ${dayData.chain.join(' → ')}</h2>
+        <h2>🔮 Энергии Суток: ${dayData.chain.join(' → ')}</h2>
         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">
             Формула: Число Души ${displaySoul} + День сетки (${dayData.currentCalDay}) = ${dayData.sum}
         </p>
@@ -199,7 +178,6 @@ function renderDashboard(name, date) {
     if (dayChainBlock) dayChainBlock.innerHTML = chainHtml;
 }
 
-// Навигатор отношений
 function runRelationsAnalysis() {
     const relDateInput = document.getElementById('relDate').value;
     const role = document.getElementById('relRole').value;
@@ -219,20 +197,20 @@ function runRelationsAnalysis() {
     }
 
     const roleTitles = {
-        child: "👼 Ребёнок",
-        friend: "🧩 Друг",
-        partner: "💖 Партнёр (Отношения)",
-        colleague: "💼 Коллега / Подчинённый"
+        child: "Ребёнок",
+        friend: "Друг",
+        partner: "Партнёр (Отношения)",
+        colleague: "Коллега / Подчинённый"
     };
 
     let resonanceType = "Нейтральный энергетический фон";
     let resonanceColor = "var(--gold)";
     
     if (relData.targetDayCode === sessionState.userDayCode) {
-        resonanceType = "⚡ Абсолютный Кармический Резонанс Ауры (Одинаковые энергии суток!)";
+        resonanceType = "Одинаковые энергии суток";
         resonanceColor = "#3fb950";
     } else if (Math.abs(relData.targetDayCode - sessionState.userDayCode) === 1) {
-        resonanceType = "🔥 Высокая синергетическая активность (Энергии достраивают друг друга)";
+        resonanceType = "Энергии достраивают друг друга";
         resonanceColor = "#f0883e";
     }
 
@@ -240,7 +218,7 @@ function runRelationsAnalysis() {
     if (outBlock) {
         outBlock.style.display = 'block';
         outBlock.innerHTML = `
-            <h2>🎯 Навигатор Отношений: Уровень PRO</h2>
+            <h2>Навигатор Отношений</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
                 <div style="background: #0d1117; padding: 14px; border-radius: 8px; border: 1px solid var(--card-border);">
                     <span style="font-size:0.8rem; color: var(--text-muted); text-transform: uppercase;">Число Души близкого:</span>
@@ -257,14 +235,14 @@ function runRelationsAnalysis() {
             </div>
             
             <div style="margin-bottom: 25px; padding: 18px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid var(--card-border);">
-                <span style="font-size:0.85rem; color: var(--text-muted);">Текущее пересечение аур:</span>
+                <span style="font-size:0.85rem; color: var(--text-muted);">Текущее пересечение:</span>
                 <div style="font-size:1.1rem; font-weight:600; color: ${resonanceColor}; margin-top:5px;">
                     ${resonanceType}
                 </div>
             </div>
             
             <div style="background: #0d1117; padding: 25px; border-radius: 12px; border-left: 5px solid var(--love); box-shadow: inset 0 0 15px rgba(0,0,0,0.3);">
-                <h4 class="tactic-card-title" style="color:white;">📝 Тактическая стратегия [Роль: ${roleTitles[role]}]:</h4>
+                <h4 class="tactic-card-title" style="color:white;">Тактическая стратегия [Роль: ${roleTitles[role]}]:</h4>
                 <p class="tactic-card-text" style="margin-top:10px; line-height:1.5; color: #c9d1d9; font-weight: 300;">${relData.tip}</p>
             </div>
         `;
@@ -272,7 +250,6 @@ function runRelationsAnalysis() {
     }
 }
 
-// Генерация Бизнес-Календаря PRO
 function runBusinessCalendarGeneration() {
     const birthDateStr = document.getElementById('mainDate').value;
     if (!birthDateStr) {
@@ -317,7 +294,6 @@ function runBusinessCalendarGeneration() {
     calendarData.rows.forEach(row => {
         const statusClass = row.statusText.toLowerCase();
 
-        // --- ЧАСТЬ А: РЕНДЕР ДЛЯ ПК ---
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="biz-date-cell">${row.date}</td>
@@ -336,7 +312,6 @@ function runBusinessCalendarGeneration() {
         if (pcBtn) pcBtn.addEventListener('click', () => triggerDownload(row, birthDateStr));
         gridBlock.appendChild(tr);
 
-        // --- ЧАСТЬ Б: РЕНДЕР КАРТОЧЕК ДЛЯ ANDROID ---
         if (mobileBlock) {
             const card = document.createElement('div');
             card.className = `mobile-biz-card border-${statusClass}`;
@@ -352,7 +327,7 @@ function runBusinessCalendarGeneration() {
                 <div class="card-mobile-lunar">${row.lunarInfo}</div>
                 <div class="card-mobile-focus">${row.focus}</div>
                 <div class="card-mobile-actions">
-                    <button class="btn-premium-download mobile-download-btn">📥 Скачать отчет (.doc)</button>
+                    <button class="btn-premium-download mobile-download-btn">Скачать отчет (.doc)</button>
                 </div>
             `;
             const mobileBtn = card.querySelector('.mobile-download-btn');
