@@ -342,35 +342,3 @@ function runBusinessCalendarGeneration() {
         wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
-
-// Логика скачивания отчета
-function triggerDownload(row, birthDateStr) {
-    try {
-        const clean = (t) => t.replace(/\*\*/g, '').replace(/\*/g, '');
-        const reportTitle = "===================================================\n" +
-                             "       PREMIUM BUSINESS INTELLIGENCE REPORT        \n" +
-                             "===================================================\n";
-        const metaInfo = `Профиль инвестора (B-Date): ${birthDateStr}\n` +
-                         `Дата наблюдения: ${row.date}\n` +
-                         `Архитип транзита: ${clean(row.vibration)}\n` +
-                         `СТАТУС СУТОК: ${clean(row.statusText)} ${row.indicator}\n` +
-                         "---------------------------------------------------\n\n";
-        const mainContent = `АНАЛИТИЧЕСКИЙ МЕМОРАНДУМ:\n${clean(row.focus)}\n\n` +
-                            "---------------------------------------------------\n" +
-                            "Сгенерировано автоматической системой бизнес-моделирования.\n" +
-                            "Конфиденциально. Для личного стратегического планирования.";
-        
-        const fullText = reportTitle + metaInfo + mainContent;
-        const blob = new Blob([fullText], { type: 'application/msword;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `Business_Report_${row.date}.doc`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    } catch (err) {
-        alert("Ошибка экспорта: " + err.message);
-    }
-}
