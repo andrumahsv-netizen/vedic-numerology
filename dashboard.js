@@ -256,25 +256,26 @@ function runBusinessCalendarGeneration() {
         alert("Пожалуйста, сначала заполните вашу дату рождения на Главном Дашборде!");
         return;
     }
-
+    
     const monthSelect = document.getElementById('calMonth');
     const yearInput = document.getElementById('calYear');
     if (!monthSelect || !yearInput) return;
 
     const targetMonth = parseInt(monthSelect.value);
     const targetYear = parseInt(yearInput.value) || 2026;
-
+    
     const calendarData = generateBusinessCalendar(birthDateStr, targetMonth, targetYear);
     if (!calendarData) return;
 
     const metaBlock = document.getElementById('calendarMeta');
     const moolankEl = document.getElementById('calUserMoolank');
     const pYearEl = document.getElementById('calUserPersonalYear');
-
+    
     if (metaBlock && moolankEl && pYearEl) {
         metaBlock.style.display = 'flex';
         moolankEl.innerText = calendarData.core.moolank;
         pYearEl.innerText = calendarData.core.personalYear;
+        
         document.getElementById('idxFinance').innerText = `${calendarData.metrics.financeIndex}%`;
         document.getElementById('barFinance').style.width = `${calendarData.metrics.financeIndex}%`;
         document.getElementById('idxRisk').innerText = `${calendarData.metrics.riskIndex}%`;
@@ -285,15 +286,14 @@ function runBusinessCalendarGeneration() {
 
     const gridBlock = document.getElementById('calendarGridBlock');
     const mobileBlock = document.getElementById('calendarMobileBlock');
-
     if (!gridBlock) return;
+    
     gridBlock.innerHTML = '';
     if (mobileBlock) mobileBlock.innerHTML = '';
 
     calendarData.rows.forEach(row => {
         const statusClass = row.statusText.toLowerCase();
 
-        // --- ЧАСТЬ А: РЕНДЕР ДЛЯ ПК ---
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="biz-date-cell">${row.date}</td>
@@ -312,7 +312,6 @@ function runBusinessCalendarGeneration() {
         if (pcBtn) pcBtn.addEventListener('click', () => triggerDownload(row, birthDateStr));
         gridBlock.appendChild(tr);
 
-        // --- ЧАСТЬ Б: РЕНДЕР КАРТОЧЕК ДЛЯ MOBILE ---
         if (mobileBlock) {
             const card = document.createElement('div');
             card.className = `mobile-biz-card border-${statusClass}`;
@@ -328,7 +327,7 @@ function runBusinessCalendarGeneration() {
                 <div class="card-mobile-lunar">${row.lunarInfo}</div>
                 <div class="card-mobile-focus">${row.focus}</div>
                 <div class="card-mobile-actions">
-                    <button class="btn-premium-download mobile-download-btn">📥 Скачать отчет (.doc)</button>
+                    <button class="btn-premium-download mobile-download-btn">Скачать отчет (.doc)</button>
                 </div>
             `;
             const mobileBtn = card.querySelector('.mobile-download-btn');
@@ -344,44 +343,27 @@ function runBusinessCalendarGeneration() {
     }
 }
 
-// 🔥 ЛОГИКА ЗАПУСКА СКАНИРОВАНИЯ ОБЪЕКТОВ И ПРОСТРАНСТВА
-function runSpaceObjectsScan() {
-    if (!sessionState.moolank) {
-        return alert("Сначала настройте вашу дату рождения на Главном Дашборде для синхронизации вашей матрицы!");
-    }
-    
-    // Вызываем обновление UI из импортированного модуля spaceScanner.js
-    updateSpaceScannerUI(sessionState.moolank);
-
-    // Автоматический плавный скролл к результатам
-    const resultBlock = document.getElementById('space-scanner-result-container');
-    if (resultBlock) {
-        resultBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-}
-
 // Логика скачивания отчета
 function triggerDownload(row, birthDateStr) {
     try {
         const clean = (t) => t.replace(/\*\*/g, '').replace(/\*/g, '');
-        const reportTitle = "===================================================\n" + 
-                             "        PREMIUM BUSINESS INTELLIGENCE REPORT        \n" + 
+        const reportTitle = "===================================================\n" +
+                             "       PREMIUM BUSINESS INTELLIGENCE REPORT        \n" +
                              "===================================================\n";
-        const metaInfo = `Профиль инвестора (B-Date): ${birthDateStr}\n` + 
-                         `Дата наблюдения: ${row.date}\n` + 
-                         `Архитип транзита: ${clean(row.vibration)}\n` + 
-                         `СТАТУС СУТОК: ${clean(row.statusText)} ${row.indicator}\n` + 
+        const metaInfo = `Профиль инвестора (B-Date): ${birthDateStr}\n` +
+                         `Дата наблюдения: ${row.date}\n` +
+                         `Архитип транзита: ${clean(row.vibration)}\n` +
+                         `СТАТУС СУТОК: ${clean(row.statusText)} ${row.indicator}\n` +
                          "---------------------------------------------------\n\n";
-        const mainContent = `АНАЛИТИЧЕСКИЙ МЕМОРАНДУМ:\n${clean(row.focus)}\n\n` + 
-                            "---------------------------------------------------\n" + 
-                            "Сгенерировано автоматической системой бизнес-моделирования.\n" + 
+        const mainContent = `АНАЛИТИЧЕСКИЙ МЕМОРАНДУМ:\n${clean(row.focus)}\n\n` +
+                            "---------------------------------------------------\n" +
+                            "Сгенерировано автоматической системой бизнес-моделирования.\n" +
                             "Конфиденциально. Для личного стратегического планирования.";
         
         const fullText = reportTitle + metaInfo + mainContent;
         const blob = new Blob([fullText], { type: 'application/msword;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        
         a.href = url;
         a.download = `Business_Report_${row.date}.doc`;
         document.body.appendChild(a);
